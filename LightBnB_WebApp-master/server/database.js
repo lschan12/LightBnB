@@ -44,10 +44,10 @@ const getUserWithId = (id) => {
   return pool.query(`
   SELECT *
   FROM users
-  WHERE id = $1
+  WHERE id = $1;
   `, [id])
     .then((res) => {
-      return res.rows[0]
+      return res.rows[0];
     });
 };
 
@@ -64,7 +64,7 @@ const addUser = (user) => {
   return pool.query(`
   INSERT INTO users (name, email, password)
   VALUES ($1, $2, $3)
-  RETURNING *
+  RETURNING *;
   `, [user.name, user.email, user.password])
     .then((res) => {
       return res.rows[0];
@@ -80,9 +80,23 @@ exports.addUser = addUser;
  * @param {string} guest_id The id of the user.
  * @return {Promise<[{}]>} A promise to the reservations.
  */
-const getAllReservations = function(guest_id, limit = 10) {
-  return getAllProperties(null, 2);
-}
+// const getAllReservations = function(guest_id, limit = 10) {
+//   return getAllProperties(null, 2);
+// }
+
+const getAllReservations = (id, limit = 10) => {
+  return pool.query(`
+  SELECT reservations.*, properties.*
+  FROM reservations
+  JOIN properties ON reservations.property_id = properties.id
+  WHERE reservations.guest_id = $1
+  LIMIT $2;
+  `, [id, limit])
+    .then((res) => {
+      return res.rows;
+    });
+};
+
 exports.getAllReservations = getAllReservations;
 
 /// Properties
