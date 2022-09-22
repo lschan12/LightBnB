@@ -173,7 +173,6 @@ exports.getAllProperties = getAllProperties;
 // }
 
 const addProperty = (property) => {
-  console.log(property);
   let queryParams = [];
   for (let key in property) {
     queryParams.push(property[key]);
